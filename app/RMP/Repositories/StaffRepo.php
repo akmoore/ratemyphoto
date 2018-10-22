@@ -37,11 +37,3 @@ class StaffRepo implements StaffInterface{
     }
 
 }
-
-// first_name
-// 2. last_name
-// 3. email
-// 4. password
-// 5. has_logged_in (date)
-// 6. has_selected_preferred_image (date)
-// 7. slug
