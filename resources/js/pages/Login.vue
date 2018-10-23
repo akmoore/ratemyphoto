@@ -87,6 +87,7 @@ export default {
                     this.loginUser(this.credentials).then(response => {
                         this.$router.push('/dashboard')
                     }).catch(err => {
+                        console.log(err)
                         this.$alert(`${err.error}. Try again.`, 'Error', {
                           confirmButtonText: 'OK',
                           callback: action => {

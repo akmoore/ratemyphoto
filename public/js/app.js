@@ -28540,7 +28540,7 @@ var baseUrl = '' + window.location.origin;
                     commit('setCurrentUserData', response.data);
                     resolve(response.data);
                 }).catch(function (err) {
-                    return reject(err.response.data);
+                    return reject(err.response);
                 });
             });
         },
@@ -58247,6 +58247,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
                     _this.loginUser(_this.credentials).then(function (response) {
                         _this.$router.push('/dashboard');
                     }).catch(function (err) {
+                        console.log(err);
                         _this.$alert(err.error + '. Try again.', 'Error', {
                             confirmButtonText: 'OK',
                             callback: function callback(action) {

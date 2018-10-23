@@ -32,7 +32,7 @@ export default new Vuex.Store({
                     // console.log(response.data)
                     commit('setCurrentUserData', response.data)
                     resolve(response.data)
-                }).catch(err => reject(err.response.data))
+                }).catch(err => reject(err.response))
             })
         },
         logoutUser({commit}){
