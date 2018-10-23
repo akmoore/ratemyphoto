@@ -121,6 +121,24 @@ export default new Vuex.Store({
                      .catch(err => reject(err.response.data))
             })
         },
+        updateStaff({commit}, staff){
+            return new Promise((resolve, reject) => {
+                axios.patch(`${baseUrl}/api/profile/${staff.slug}`, staff, {headers: {Authorization: `Bearer ${getToken()}`}})
+                     .then(response => {
+                         resolve(response.data)
+                     })
+                     .catch(err => reject(err.response.data))
+            })
+        },
+        deleteStaff({commit}, staffId){
+            return new Promise((resolve, reject) => {
+                axios.delete(`${baseUrl}/api/profile/${staffId}`, {headers: {Authorization: `Bearer ${getToken()}`}})
+                     .then(response => {
+                         resolve(response.data)
+                     })
+                     .catch(err => reject(err.response.data))
+            })
+        },
 
         //Photos
         getPhotos({commit}, staff){
@@ -151,6 +169,14 @@ export default new Vuex.Store({
                      dispatch('getPhotos', response.data)
                     //  resolve(response.data)
                  })
+        },
+        deletePhoto({commit}, photo){
+            return new Promise((resolve, reject) => {
+                axios.delete(`${baseUrl}/api/images/${photo}`, {headers: {Authorization: `Bearer ${getToken()}`}})
+                     .then(response => {
+                         resolve(response.data)
+                     }).catch(err => reject(err.response.data))
+            })
         }
     },
     mutations:{

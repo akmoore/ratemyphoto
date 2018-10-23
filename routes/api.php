@@ -38,8 +38,11 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::post('staff', 'StaffController@store');
     Route::get('staff', 'StaffController@index');
     Route::get('profile/{slug}', 'StaffController@show');
+    Route::patch('profile/{slug}', 'StaffController@update');
+    Route::delete('profile/{id}', 'StaffController@delete');
     Route::post('image', 'PhotoController@store');
     Route::get('images', 'PhotoController@index');
+    Route::delete('images/{id}', 'PhotoController@delete');
     Route::get('download/{id}', 'PhotoController@download');
     Route::post('prefer/{id}', 'PhotoController@prefer');
 });

@@ -1,11 +1,11 @@
 <template>
     <div class="full-wh flexbox">
-        <el-row>
+        <el-row >
             <el-col :span="18" :offset="3" style="display:flex;justify-content:center;">
                 <img src="/images/Rate_My_Photo.svg" class="image">
             </el-col>
-            <el-col :span="18" :offset="3">
-                <el-card class="box-card">
+            <el-col :xs="20" :sm="12" :md="12" :lg="12" :xl="12" style="margin-right:auto;margin-left:auto;float:none;padding-top:40px;">
+                <el-card class="box-card" >
                     <div slot="header" class="clearfix">
                         Login
                     </div>

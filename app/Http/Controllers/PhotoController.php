@@ -92,6 +92,28 @@ class PhotoController extends Controller
         ]);
     }
 
+    public function delete($id){
+        $photo = Photo::findOrFail($id);
+        $user = User::findOrFail($photo->user_id);
+        $directory = "/uploads/staff-photos/" . $user->slug . "/";        
+        $photoArray = [
+            $photo->image_thumb,
+            $photo->image_sm,
+            $photo->image_md,
+            $photo->image_lg,
+            $photo->image_org
+        ];
+
+        collect($photoArray)->each(function($photo){
+            \Storage::disk('spaces')->delete($photo);
+        });
+
+        $photo->delete();
+
+        return $photo;
+
+    }
+
     /**
      * Saves the file
      *

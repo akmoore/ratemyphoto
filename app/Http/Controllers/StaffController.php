@@ -38,4 +38,13 @@ class StaffController extends Controller
         // return $slug;
         return $this->staff->getRecord($slug);
     }
+
+    public function update(Request $request, $slug){
+        // return ['slug' => $slug, 'request' => $request->all()];
+        return $this->staff->updateRecord($request, $slug);
+    }
+
+    public function delete($id){
+        return $this->staff->deleteRecord($id);
+    }
 }

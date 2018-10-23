@@ -3,7 +3,9 @@
         <el-header>
             <el-row type="flex" justify="space-between">
                 <el-col>
-                    <img src="/images/Rate_My_Photo.svg" class="image-header">
+                    <router-link to="/dashboard">
+                        <img src="/images/Rate_My_Photo.svg" class="image-header">
+                    </router-link>
                     <!-- Rate My Photo -->
                 </el-col>
                 <el-col>

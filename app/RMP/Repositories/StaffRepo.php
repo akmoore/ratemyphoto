@@ -2,6 +2,7 @@
 
 namespace App\RMP\Repositories;
 
+use Storage;
 use App\User;
 use App\RMP\Interfaces\Staff as StaffInterface;
 
@@ -23,17 +24,32 @@ class StaffRepo implements StaffInterface{
             'last_name' => $name[1],
             'email' => $request->email
         ]);
-        // $staff->password = bcrypt($staff->slug);
-        // $staff->save();
         return $staff;
     }
 
     public function updateRecord($request, $id){
-        //
+        $user = User::where('slug', $id)->firstOrFail();
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->email = $request->email;
+        $user->save();
+
+        return $user;
     }
 
     public function deleteRecord($id){
-        //
+        // return ['deleted' => $id];
+        $user = User::findOrFail($id);
+
+        //Delete All Assoc Photos
+        $directory = "/uploads/staff-photos/" . $user->slug . "/";
+        \Storage::disk('spaces')->deleteDirectory($directory);                        
+
+        //Delete User
+        $user->delete();
+
+        //Return the deleted user
+        return $user;
     }
 
 }

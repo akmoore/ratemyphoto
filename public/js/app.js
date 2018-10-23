@@ -28646,11 +28646,33 @@ var baseUrl = '' + window.location.origin;
                 });
             });
         },
+        updateStaff: function updateStaff(_ref10, staff) {
+            var commit = _ref10.commit;
+
+            return new Promise(function (resolve, reject) {
+                axios.patch(baseUrl + '/api/profile/' + staff.slug, staff, { headers: { Authorization: 'Bearer ' + Object(__WEBPACK_IMPORTED_MODULE_4__local_storage__["b" /* getToken */])() } }).then(function (response) {
+                    resolve(response.data);
+                }).catch(function (err) {
+                    return reject(err.response.data);
+                });
+            });
+        },
+        deleteStaff: function deleteStaff(_ref11, staffId) {
+            var commit = _ref11.commit;
+
+            return new Promise(function (resolve, reject) {
+                axios.delete(baseUrl + '/api/profile/' + staffId, { headers: { Authorization: 'Bearer ' + Object(__WEBPACK_IMPORTED_MODULE_4__local_storage__["b" /* getToken */])() } }).then(function (response) {
+                    resolve(response.data);
+                }).catch(function (err) {
+                    return reject(err.response.data);
+                });
+            });
+        },
 
 
         //Photos
-        getPhotos: function getPhotos(_ref10, staff) {
-            var commit = _ref10.commit;
+        getPhotos: function getPhotos(_ref12, staff) {
+            var commit = _ref12.commit;
 
             // console.log(staff)
             return new Promise(function (resolve, reject) {
@@ -28662,8 +28684,8 @@ var baseUrl = '' + window.location.origin;
                 });
             });
         },
-        downloadPhoto: function downloadPhoto(_ref11, photo) {
-            var commit = _ref11.commit;
+        downloadPhoto: function downloadPhoto(_ref13, photo) {
+            var commit = _ref13.commit;
 
             return new Promise(function (resolve, reject) {
                 axios.get(baseUrl + '/api/download/' + photo.id, { headers: { Authorization: 'Bearer ' + Object(__WEBPACK_IMPORTED_MODULE_4__local_storage__["b" /* getToken */])() } }).then(function (response) {
@@ -28674,14 +28696,25 @@ var baseUrl = '' + window.location.origin;
                 });
             });
         },
-        preferPhoto: function preferPhoto(_ref12, photo) {
-            var commit = _ref12.commit,
-                dispatch = _ref12.dispatch;
+        preferPhoto: function preferPhoto(_ref14, photo) {
+            var commit = _ref14.commit,
+                dispatch = _ref14.dispatch;
 
             axios.post(baseUrl + '/api/prefer/' + photo.id, null, { headers: { Authorization: 'Bearer ' + Object(__WEBPACK_IMPORTED_MODULE_4__local_storage__["b" /* getToken */])() } }).then(function (response) {
                 //  console.log(response)
                 dispatch('getPhotos', response.data);
                 //  resolve(response.data)
+            });
+        },
+        deletePhoto: function deletePhoto(_ref15, photo) {
+            var commit = _ref15.commit;
+
+            return new Promise(function (resolve, reject) {
+                axios.delete(baseUrl + '/api/images/' + photo, { headers: { Authorization: 'Bearer ' + Object(__WEBPACK_IMPORTED_MODULE_4__local_storage__["b" /* getToken */])() } }).then(function (response) {
+                    resolve(response.data);
+                }).catch(function (err) {
+                    return reject(err.response.data);
+                });
             });
         }
     },
@@ -56116,6 +56149,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
 
 
 
@@ -57535,12 +57570,18 @@ var render = function() {
             "el-row",
             { attrs: { type: "flex", justify: "space-between" } },
             [
-              _c("el-col", [
-                _c("img", {
-                  staticClass: "image-header",
-                  attrs: { src: "/images/Rate_My_Photo.svg" }
-                })
-              ]),
+              _c(
+                "el-col",
+                [
+                  _c("router-link", { attrs: { to: "/dashboard" } }, [
+                    _c("img", {
+                      staticClass: "image-header",
+                      attrs: { src: "/images/Rate_My_Photo.svg" }
+                    })
+                  ])
+                ],
+                1
+              ),
               _vm._v(" "),
               _c(
                 "el-col",
@@ -58293,7 +58334,15 @@ var render = function() {
           _vm._v(" "),
           _c(
             "el-col",
-            { attrs: { span: 18, offset: 3 } },
+            {
+              staticStyle: {
+                "margin-right": "auto",
+                "margin-left": "auto",
+                float: "none",
+                "padding-top": "40px"
+              },
+              attrs: { xs: 20, sm: 12, md: 12, lg: 12, xl: 12 }
+            },
             [
               _c(
                 "el-card",
@@ -104846,6 +104895,25 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -104853,7 +104921,13 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     name: 'Staff',
     data: function data() {
         return {
-            user: null
+            user: null,
+            profileForm: {
+                first_name: null,
+                last_name: null,
+                email: null
+            },
+            fullscreenLoading: false
         };
     },
     created: function created() {
@@ -104872,15 +104946,97 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             }
         }
     },
-    methods: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapActions */])(['getStaffProfile']), {
+    methods: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapActions */])(['getStaffProfile', 'updateStaff', 'deleteStaff', 'deletePhoto']), {
         getStaff: function getStaff() {
             var _this = this;
 
             this.getStaffProfile(this.$route.params.slug).then(function (response) {
-                console.log(response);
+                // console.log(response)
                 _this.user = response;
+                _this.setProfile(response);
+            }).catch(function (err) {
+                _this.$message({
+                    type: 'error',
+                    message: err.message
+                });
+                _this.$router.push('/dashboard');
+            });
+        },
+        setProfile: function setProfile(user) {
+            this.profileForm.first_name = user.first_name;
+            this.profileForm.last_name = user.last_name;
+            this.profileForm.email = user.email;
+        },
+        updateProfile: function updateProfile() {
+            var _this2 = this;
+
+            var data = _extends({}, this.profileForm, { slug: this.user.slug });
+            this.updateStaff(data).then(function (response) {
+                // console.log(response)
+                _this2.$message({
+                    type: 'success',
+                    message: response.full_name + '\'s profile was successfully updated.'
+                });
             }).catch(function (err) {
                 return console.log(err);
+            });
+        },
+        deleteUser: function deleteUser() {
+            var _this3 = this;
+
+            this.$confirm('This will permanently delete ' + this.user.full_name + '\'s profile, Continue?', 'Warning', {
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Cancel',
+                type: 'error'
+            }).then(function () {
+                _this3.deleteStaff(_this3.user.id).then(function (response) {
+                    _this3.$message({
+                        type: 'success',
+                        message: response.full_name + ' was successfully deleted.'
+                    });
+                    _this3.$router.push('/dashboard');
+                }).catch(function (err) {
+                    _this3.$message({
+                        type: 'error',
+                        message: err.message
+                    });
+                });
+            }).catch(function () {
+                _this3.$message({
+                    type: 'info',
+                    message: 'Delete canceled'
+                });
+            });
+        },
+        deleteImage: function deleteImage(image) {
+            var _this4 = this;
+
+            console.log(image);
+            this.$confirm('This will permanently delete ' + image.image_name + ', Continue?', 'Warning', {
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Cancel',
+                type: 'error'
+            }).then(function () {
+                _this4.fullscreenLoading = true;
+                _this4.deletePhoto(image.id).then(function (response) {
+                    _this4.$message({
+                        type: 'success',
+                        message: response.image_name + ' was successfully deleted.'
+                    });
+                    _this4.fullscreenLoading = false;
+                    _this4.getStaff();
+                }).catch(function (err) {
+                    _this4.$message({
+                        type: 'error',
+                        message: err.message
+                    });
+                    _this4.fullscreenLoading = false;
+                });
+            }).catch(function () {
+                _this4.$message({
+                    type: 'info',
+                    message: 'Delete canceled.'
+                });
             });
         }
     })
@@ -105063,7 +105219,6 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "el-row",
-    { attrs: { gutter: 20 } },
     [
       _vm.user
         ? _c(
@@ -105073,65 +105228,103 @@ var render = function() {
               _c("el-card", { attrs: { "body-style": { padding: "20px" } } }, [
                 _vm.primaryImage
                   ? _c("img", {
-                      staticStyle: { "max-width": "100%" },
+                      staticStyle: {
+                        "max-width": "100%",
+                        "border-radius": "10px"
+                      },
                       attrs: { src: _vm.primaryImage, alt: "" }
                     })
                   : _c("img", {
                       staticClass: "image",
+                      staticStyle: { "border-radius": "10px" },
                       attrs: { src: "/images/pexels-doughnut.jpg" }
                     }),
                 _vm._v(" "),
                 _c(
                   "div",
-                  { staticStyle: { padding: "14px" } },
+                  { staticStyle: { padding: "14px", "margin-top": "20px" } },
                   [
-                    _c("el-input", {
-                      staticClass: "mt mb",
-                      attrs: { placeholder: "First Name" },
-                      model: {
-                        value: _vm.user.first_name,
-                        callback: function($$v) {
-                          _vm.$set(_vm.user, "first_name", $$v)
-                        },
-                        expression: "user.first_name"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("el-input", {
-                      staticClass: "mb",
-                      attrs: { placeholder: "Last Name" },
-                      model: {
-                        value: _vm.user.last_name,
-                        callback: function($$v) {
-                          _vm.$set(_vm.user, "last_name", $$v)
-                        },
-                        expression: "user.last_name"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("el-input", {
-                      staticClass: "mb",
-                      attrs: { placeholder: "Email" },
-                      model: {
-                        value: _vm.user.email,
-                        callback: function($$v) {
-                          _vm.$set(_vm.user, "email", $$v)
-                        },
-                        expression: "user.email"
-                      }
-                    }),
-                    _vm._v(" "),
                     _c(
-                      "div",
-                      { staticClass: "mt" },
+                      "el-form",
+                      {
+                        ref: "profileForm",
+                        attrs: { model: _vm.profileForm, "label-width": "90px" }
+                      },
                       [
-                        _c("el-button", { attrs: { type: "primary" } }, [
-                          _vm._v("Save")
-                        ]),
+                        _c(
+                          "el-form-item",
+                          { attrs: { label: "First Name" } },
+                          [
+                            _c("el-input", {
+                              model: {
+                                value: _vm.profileForm.first_name,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.profileForm, "first_name", $$v)
+                                },
+                                expression: "profileForm.first_name"
+                              }
+                            })
+                          ],
+                          1
+                        ),
                         _vm._v(" "),
-                        _c("el-button", { attrs: { type: "danger" } }, [
-                          _vm._v("Delete")
-                        ])
+                        _c(
+                          "el-form-item",
+                          { attrs: { label: "Last Name" } },
+                          [
+                            _c("el-input", {
+                              model: {
+                                value: _vm.profileForm.last_name,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.profileForm, "last_name", $$v)
+                                },
+                                expression: "profileForm.last_name"
+                              }
+                            })
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "el-form-item",
+                          { attrs: { label: "Email" } },
+                          [
+                            _c("el-input", {
+                              model: {
+                                value: _vm.profileForm.email,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.profileForm, "email", $$v)
+                                },
+                                expression: "profileForm.email"
+                              }
+                            })
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "el-form-item",
+                          [
+                            _c(
+                              "el-button",
+                              {
+                                attrs: { type: "primary" },
+                                on: { click: _vm.updateProfile }
+                              },
+                              [_vm._v("Save")]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "el-button",
+                              {
+                                attrs: { type: "danger" },
+                                on: { click: _vm.deleteUser }
+                              },
+                              [_vm._v("Delete")]
+                            )
+                          ],
+                          1
+                        )
                       ],
                       1
                     )
@@ -105148,54 +105341,87 @@ var render = function() {
         ? _c(
             "el-col",
             { staticStyle: { padding: "20px" }, attrs: { xs: 24, sm: 12 } },
-            _vm._l(_vm.user.photos, function(photo) {
-              return _c(
-                "el-col",
-                {
-                  key: photo.id,
-                  staticStyle: { "margin-bottom": "15px" },
-                  attrs: { span: 6 }
-                },
-                [
-                  _c(
-                    "el-card",
-                    { attrs: { "body-style": { padding: "7px" } } },
+            [
+              _c(
+                "el-row",
+                { attrs: { gutter: 20 } },
+                _vm._l(_vm.user.photos, function(photo) {
+                  return _c(
+                    "el-col",
+                    {
+                      key: photo.id,
+                      staticStyle: { "margin-bottom": "15px" },
+                      attrs: { xs: 8, sm: 6 }
+                    },
                     [
-                      _c("img", {
-                        staticStyle: { "max-width": "100%" },
-                        attrs: {
-                          src:
-                            "https://akmoore.nyc3.digitaloceanspaces.com" +
-                            photo.image_thumb,
-                          alt: ""
-                        }
-                      }),
-                      _vm._v(" "),
                       _c(
-                        "div",
+                        "el-card",
+                        { attrs: { "body-style": { padding: "7px" } } },
                         [
-                          _c("span", [_vm._v(_vm._s(photo.image_name))]),
+                          _c("img", {
+                            staticStyle: { "max-width": "100%" },
+                            attrs: {
+                              src:
+                                "https://akmoore.nyc3.digitaloceanspaces.com" +
+                                photo.image_thumb,
+                              alt: ""
+                            }
+                          }),
                           _vm._v(" "),
                           _c(
-                            "el-button",
-                            {
-                              staticStyle: {
-                                outline: "none",
-                                margin: "0 auto"
-                              },
-                              attrs: { type: "danger", size: "mini" }
-                            },
-                            [_vm._v("Delete")]
+                            "div",
+                            [
+                              _c("span", [_vm._v(_vm._s(photo.image_name))]),
+                              _vm._v(" "),
+                              _c("br"),
+                              _vm._v(" "),
+                              _c(
+                                "el-button",
+                                {
+                                  directives: [
+                                    {
+                                      name: "loading",
+                                      rawName: "v-loading.fullscreen.lock",
+                                      value: _vm.fullscreenLoading,
+                                      expression: "fullscreenLoading",
+                                      modifiers: {
+                                        fullscreen: true,
+                                        lock: true
+                                      }
+                                    }
+                                  ],
+                                  staticStyle: {
+                                    outline: "none",
+                                    margin: "0 auto"
+                                  },
+                                  attrs: {
+                                    type: "danger",
+                                    size: "mini",
+                                    "element-loading-text":
+                                      "Deleting " + photo.image_name,
+                                    "element-loading-background":
+                                      "rgba(255, 255, 255, 0.6)"
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.deleteImage(photo)
+                                    }
+                                  }
+                                },
+                                [_vm._v("Delete")]
+                              )
+                            ],
+                            1
                           )
-                        ],
-                        1
+                        ]
                       )
-                    ]
+                    ],
+                    1
                   )
-                ],
-                1
+                })
               )
-            })
+            ],
+            1
           )
         : _vm._e()
     ],
