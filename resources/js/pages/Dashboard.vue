@@ -300,7 +300,7 @@ export default {
     }
 
     .image-header{
-        max-width: 150px;
+        width: 200px;
         margin-top: -5px;
     }
 
