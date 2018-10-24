@@ -17,6 +17,8 @@ class CreateDownloadsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('photo_id')->index();
             $table->timestamps();
+
+            $table->foreign('photo_id')->references('id')->on('photos')->onDelete('cascade');
         });
     }
 

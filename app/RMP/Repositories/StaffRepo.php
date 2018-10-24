@@ -41,9 +41,9 @@ class StaffRepo implements StaffInterface{
         // return ['deleted' => $id];
         $user = User::findOrFail($id);
 
-        //Delete All Assoc Photos
+        //Delete All Assoc Photos from directory
         $directory = "/uploads/staff-photos/" . $user->slug . "/";
-        \Storage::disk('spaces')->deleteDirectory($directory);                        
+        \Storage::disk('spaces')->deleteDirectory($directory);  
 
         //Delete User
         $user->delete();

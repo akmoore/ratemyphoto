@@ -24,6 +24,8 @@ class CreatePhotosTable extends Migration
             $table->string('image_lg')->nullable();
             $table->string('image_org')->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

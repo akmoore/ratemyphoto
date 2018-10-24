@@ -1,8 +1,8 @@
 <template>
     <el-row >
-        <el-col :xs="24" :sm="12" v-if="user" style="padding: 20px;">
+        <el-col :xs="24" :sm="12" :lg="8" :xl="6" v-if="user" style="padding: 20px;">
             <el-card :body-style="{ padding: '20px' }">
-                <img :src="primaryImage" alt="" style="max-width: 100%;border-radius:10px;" v-if="primaryImage">
+                <img :src="primaryImage" alt="" class="image-center" style="max-width: 100%;border-radius:10px;" v-if="primaryImage">
                 <img src="/images/pexels-doughnut.jpg" class="image" style="border-radius:10px;" v-else>
                 <div style="padding: 14px;margin-top:20px;">
                     <el-form ref="profileForm" :model="profileForm" label-width="90px">
@@ -23,9 +23,9 @@
                 </div>
             </el-card>
         </el-col>
-        <el-col :xs="24" :sm="12" v-if="user" style="padding: 20px;">
+        <el-col :xs="24" :sm="12" :lg="16" :xl="18" v-if="user" style="padding: 20px;">
             <el-row :gutter="20">
-                <el-col :xs="8" :sm="6" v-for="photo in user.photos" :key="photo.id" style="margin-bottom: 15px;">
+                <el-col :xs="8" :sm="6" :lg="4" :xl="3" v-for="(photo, photoIndex) in user.photos" :key="photoIndex" style="margin-bottom: 15px;">
                     <el-card :body-style="{ padding: '7px' }">
                         <img :src="`https://akmoore.nyc3.digitaloceanspaces.com${photo.image_thumb}`" alt="" style="max-width: 100%;">
                         <div>
@@ -39,20 +39,36 @@
                                 v-loading.fullscreen.lock="fullscreenLoading"
                                 :element-loading-text="`Deleting ${photo.image_name}`"
                                 element-loading-background="rgba(255, 255, 255, 0.6)"
-                            >Delete</el-button>
+                                icon="el-icon-delete"
+                                circle
+                            ></el-button>
+                            <el-button 
+                                type="primary" 
+                                size="mini" 
+                                icon="el-icon-view" 
+                                style="outline:none;margin: 0 auto;" 
+                                circle
+                                @click="index = photoIndex"
+                            ></el-button>
                         </div>
                     </el-card>
                 </el-col>
             </el-row>
         </el-col>
+        <gallery :images="galleryPhotos" :index="index" @close="index = null"></gallery>
     </el-row>
 </template>
 
 <script>
 import {mapActions} from 'vuex'
+import VueGallery from 'vue-gallery'
+
 
 export default {
     name: 'Staff',
+    components: {
+      'gallery': VueGallery
+    },
     data(){
         return {
             user: null,
@@ -61,7 +77,8 @@ export default {
                 last_name: null,
                 email: null
             },
-            fullscreenLoading: false
+            fullscreenLoading: false,
+            index: null
         }
     },
     created(){
@@ -75,6 +92,10 @@ export default {
             }else{
                 return null;
             }
+        },
+        galleryPhotos(){
+            let photos = this.user.photos.map(photo => `https://akmoore.nyc3.digitaloceanspaces.com${photo.image_md}`)
+            return photos
         }
     },
     methods:{
@@ -171,5 +192,11 @@ export default {
 
     .mt{
         margin-top: 10px;
+    }
+
+    .image-center{
+        display: block;
+        margin-right: auto;
+        margin-left: auto;
     }
 </style>
