@@ -3,7 +3,7 @@
         <el-col :xs="24" :sm="12" :lg="8" :xl="6" v-if="user" style="padding: 20px;">
             <el-card :body-style="{ padding: '20px' }">
                 <img :src="primaryImage" alt="" class="image-center" style="max-width: 100%;border-radius:10px;" v-if="primaryImage">
-                <img src="/images/pexels-doughnut.jpg" class="image" style="border-radius:10px;" v-else>
+                <img src="/images/staff_no_photo.png" class="image" style="border-radius:10px;" v-else>
                 <div style="padding: 14px;margin-top:20px;">
                     <el-form ref="profileForm" :model="profileForm" label-width="90px">
                         <el-form-item label="First Name">

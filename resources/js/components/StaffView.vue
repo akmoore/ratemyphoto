@@ -14,7 +14,8 @@
         <el-row :gutter="20">
             <el-col 
                 :xs="24" :sm="12" 
-                :md="8" :lg="6" 
+                :md="8" :lg="6"
+                :xl="4" 
                 v-for="(photo, photoIndex) in photos" :key="photoIndex" class="image-card">
                 <el-card :body-style="{ padding: '0px' }" shadow="hover" style="position:relative;">
                     <i class="el-icon-success success-icon" v-if="photo.preferred"></i>

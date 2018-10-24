@@ -23,7 +23,7 @@
                         width="80">
                         <template slot-scope="scope">
                             <img :src="`https://akmoore.nyc3.digitaloceanspaces.com${primaryImage(scope.row.photos)['image_sm']}`" class="image" v-if="primaryImage(scope.row.photos)">
-                            <img src="/images/pexels-doughnut.jpg" class="image" v-else>
+                            <img src="/images/staff_no_photo.png" class="image" v-else>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -166,6 +166,10 @@ export default {
 </script>
 
 <style scoped>
+
+    .image{
+        border-radius: 5px;
+    }
 
     .outline-none{
         outline: none;

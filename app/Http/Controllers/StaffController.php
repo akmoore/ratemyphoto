@@ -31,6 +31,10 @@ class StaffController extends Controller
      * @return object
      */
     public function store(Request $request){
+        if(auth()->user()->role !== 'admin'){
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
         return $this->staff->storeRecord($request);
     }
 
@@ -40,11 +44,18 @@ class StaffController extends Controller
     }
 
     public function update(Request $request, $slug){
+        if(auth()->user()->role !== 'admin'){
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
         // return ['slug' => $slug, 'request' => $request->all()];
         return $this->staff->updateRecord($request, $slug);
     }
 
     public function delete($id){
+        if(auth()->user()->role !== 'admin'){
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+        
         return $this->staff->deleteRecord($id);
     }
 }

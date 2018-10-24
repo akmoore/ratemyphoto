@@ -68,6 +68,10 @@ class PhotoController extends Controller
     // }
 
     public function store(Request $request){
+        if(auth()->user()->role !== 'admin'){
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+        
         // create the file receiver
         $receiver = new FileReceiver("file", $request, HandlerFactory::classFromRequest($request));
         // check if the upload is success, throw exception or return response you need
@@ -93,6 +97,10 @@ class PhotoController extends Controller
     }
 
     public function delete($id){
+        if(auth()->user()->role !== 'admin'){
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
         $photo = Photo::findOrFail($id);
         $user = User::findOrFail($photo->user_id);
         $directory = "/uploads/staff-photos/" . $user->slug . "/";        

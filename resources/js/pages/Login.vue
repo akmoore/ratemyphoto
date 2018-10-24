@@ -151,7 +151,7 @@ export default {
     } 
 
     .image{
-        width: 80%;
+        width: 250px;
         margin-bottom: -90px;
         margin-top: 70px;
     }
