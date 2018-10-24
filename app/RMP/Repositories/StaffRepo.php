@@ -40,11 +40,13 @@ class StaffRepo implements StaffInterface{
     public function deleteRecord($id){
         // return ['deleted' => $id];
         $user = User::findOrFail($id);
-        return $user;
+        // return $user;
 
         //Delete All Assoc Photos from directory
         $directory = "/uploads/staff-photos/" . $user->slug . "/";
-        \Storage::disk('spaces')->deleteDirectory($directory);  
+        $storage = \Storage::disk('spaces')->deleteDirectory($directory);  
+
+        return ['directory' => $directory, 'storage' => $storage];        
 
         //Delete User
         $user->delete();
