@@ -99,6 +99,6 @@ class User extends Authenticatable implements JWTSubject
      * @return object
      */
     public function photos(){
-        return $this->hasMany(Photo::class);
+        return $this->hasMany(Photo::class)->orderBy('image_name');
     }
 }
