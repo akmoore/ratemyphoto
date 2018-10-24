@@ -38,7 +38,7 @@ class StaffRepo implements StaffInterface{
     }
 
     public function deleteRecord($id){
-        // return ['deleted' => $id];
+        return ['deleted' => $id];
         $user = User::findOrFail($id);
 
         //Delete All Assoc Photos from directory
