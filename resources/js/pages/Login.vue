@@ -4,7 +4,7 @@
             <el-col :span="18" :offset="3" style="display:flex;justify-content:center;">
                 <img src="/images/Rate_My_Photo.svg" class="image">
             </el-col>
-            <el-col :xs="20" :sm="12" :md="12" :lg="12" :xl="12" style="margin-right:auto;margin-left:auto;float:none;padding-top:40px;">
+            <el-col :xs="20" :sm="12" :md="10" :lg="8" :xl="8" style="margin-right:auto;margin-left:auto;float:none;padding-top:40px;">
                 <el-card class="box-card" >
                     <div slot="header" class="clearfix">
                         Login
