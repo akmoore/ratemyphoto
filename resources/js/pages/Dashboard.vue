@@ -5,6 +5,7 @@
                 <el-col>
                     <router-link to="/dashboard">
                         <img src="/images/Rate_My_Photo.svg" class="image-header">
+                        <!-- <div class="image-header-bg"></div> -->
                     </router-link>
                     <!-- Rate My Photo -->
                 </el-col>
@@ -300,7 +301,14 @@ export default {
 
     .image-header{
         max-width: 150px;
-        margin-top: -15px;
+        margin-top: -5px;
+    }
+
+    .image-header-bg{
+        width: 200px;
+        height: 75px;
+        background-color: green;
+        position: relative;
     }
 
     .image{
