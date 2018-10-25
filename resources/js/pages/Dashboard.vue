@@ -27,10 +27,17 @@
         <router-view></router-view>
 
         <!-- Add Staff Modal -->
-        <el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" title="Add Staff" :visible.sync="dialogFormVisible">
+        <el-dialog 
+            :close-on-click-modal="false" 
+            :close-on-press-escape="false" 
+            :show-close="false" 
+            title="Add Staff" 
+            :visible.sync="dialogFormVisible"
+            v-if="user.role === 'admin'"
+        >
             <el-form :model="addStaffForm" :rules="addStaffFormRules" ref="addStaffForm" label-width="120px">
                 <el-form-item label="Name" prop="name">
-                    <el-input v-model="addStaffForm.name" autocomplete="off"></el-input>
+                    <el-input v-model="addStaffForm.name" autocomplete="off" @blur="formatEmail"></el-input>
                 </el-form-item>
                 <el-form-item label="Email" prop="email">
                     <el-input type="email" v-model="addStaffForm.email" autocomplete="off"></el-input>
@@ -281,6 +288,16 @@ export default {
         closeProfileModal(formName){
             this.dialogProfileVisible = false
             this.resetForm(formName)
+        },
+        formatEmail(){
+            if(this.addStaffForm.name && this.addStaffForm.name.split(' ').length > 1){
+                this.addStaffForm.email = null
+                let name = this.addStaffForm.name.split(' ')
+                let firstNameInitial = name[0][0]
+                let lastName = name[1]
+                let email = `${firstNameInitial}${lastName}@brproud.com`
+                this.addStaffForm.email = email.toLowerCase()
+            }
         }
     }
 }
