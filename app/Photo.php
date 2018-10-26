@@ -20,7 +20,7 @@ class Photo extends Model
 
     //Attributes (Dynamic Fields)
     public function getNameAttribute(){
-        return $this->image_md;
+        return $this->image_lg;
     }
 
     public function getAltAttribute(){
