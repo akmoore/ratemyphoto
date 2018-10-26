@@ -39,9 +39,14 @@
                     <el-table-column
                         prop="has_logged_in"
                         label="Logged In?"
-                        width="180">
+                        width="200">
                         <template slot-scope="scope">
-                            {{ scope.row.has_logged_in ? ` Yes (${convertedDate(scope.row.has_logged_in)})` : 'No' }}
+                            <div v-if="scope.row.logins.length">
+                                {{convertedDate(scope.row.logins[scope.row.logins.length - 1]['created_at'])}}
+                                <br>
+                                <span style="letter-spacing: 2px;"><small><b>{{scope.row.logins[scope.row.logins.length - 1]['type'].toUpperCase()}}</b></small></span>
+                            </div>
+                            <div v-else>No</div>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -144,7 +149,7 @@ export default {
     methods:{
         ...mapActions(['getAllStaff']),
         convertedDate(date){
-            return dayjs(date).format('MMM DD, YYYY')
+            return dayjs(date).format('MM/DD/YYYY @ hh:mm a')
         },
         openImagesModal(staff){
             this.selectedStaff = staff

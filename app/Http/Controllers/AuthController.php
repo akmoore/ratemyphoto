@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Auth;
 use Mail;
+use Hash;
 use App\User;
+use App\Login;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Mail\EmailLoginVerify;
@@ -35,11 +37,13 @@ class AuthController extends Controller
         }
 
         if(auth()->user()->role === 'staff'){
-            $user = auth()->user();
-            if(!$user->has_logged_in){
-                $user->has_logged_in = Carbon::now();
-                $user->save();
-            }
+            // $user = auth()->user();
+            // if(!$user->has_logged_in){
+            //     $user->has_logged_in = Carbon::now();
+            //     $user->save();
+            // }
+            // config(['app.timezone' => 'America/Chicago']);
+            auth()->user()->logins()->create(['type' => 'password']);
         }
 
         return $this->respondWithToken($token);
@@ -51,7 +55,7 @@ class AuthController extends Controller
         
         //Create token
         $token = 'RMP-'. strtoupper(str_random(5));
-        $user->email_verify_token = $token;
+        $user->email_verify_token = Hash::make($token);
         $user->email_verify_token_exp = \Carbon\Carbon::now()->addMinutes(2);
         $user->save();
 
@@ -69,16 +73,18 @@ class AuthController extends Controller
         $now = \Carbon\Carbon::now();
         $isExpired = $user->email_verify_token_exp < $now;
         
-        if($user->email_verify_token === $credentials['token'] && !$isExpired){
+        if(Hash::check($credentials['token'], $user->email_verify_token) && !$isExpired){
             $this->deleteUserToken($user);
             $token = auth()->login($user);
 
             if(auth()->user()->role === 'staff'){
-                $user = auth()->user();
-                if(!$user->has_logged_in){
-                    $user->has_logged_in = Carbon::now();
-                    $user->save();
-                }
+                // $user = auth()->user();
+                // if(!$user->has_logged_in){
+                //     $user->has_logged_in = Carbon::now();
+                //     $user->save();
+                // }
+                // config(['app.timezone' => 'America/Chicago']);
+                auth()->user()->logins()->create(['type' => 'email']);
             }
 
             return $this->respondWithToken($token);

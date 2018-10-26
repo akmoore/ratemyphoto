@@ -2,7 +2,10 @@
     <div class="full-wh flexbox">
         <el-row >
             <el-col :span="18" :offset="3" style="display:flex;justify-content:center;">
-                <img src="/images/Rate_My_Photo.svg" class="image">
+                <!-- <img src="/images/Rate_My_Photo.svg" class="image"> -->
+                <div style="display: block;margin-top: 60px;">
+                    <lottie :options="defaultOptions" :height="107" :width="324" v-on:animCreated="handleAnimation"/>
+                </div>
             </el-col>
             <el-col :xs="20" :sm="12" :md="10" :lg="8" :xl="8" style="margin-right:auto;margin-left:auto;float:none;padding-top:40px;">
                 <el-card class="box-card" >
@@ -53,9 +56,15 @@
 
 <script>
 import {mapActions} from 'vuex'
+// import Lottie from './lottie.vue';
+import Lottie from 'vue-lottie'
+import * as animationData from '../rmp_anim_2.json';
 
 export default {
     name: "Login",
+    components: {
+      'lottie': Lottie
+    },
     data(){
         return{
             passwordEmailLogin: true,
@@ -76,11 +85,15 @@ export default {
                 token: [
                     {required: true, min: 9, max: 9, message: 'Please enter a valid token.', trigger: 'blur'}
                 ]
-            }
+            },
+            defaultOptions: {animationData: animationData,loop: false},
         }
     },
     methods:{
         ...mapActions(['loginUser', 'loginEmailOnly', 'checkToken']),
+        handleAnimation: function (anim) {
+        this.anim = anim;
+      },
         login(formName){
             this.$refs[formName].validate((valid) => {
                 if (valid) {

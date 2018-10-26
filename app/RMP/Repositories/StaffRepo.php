@@ -9,11 +9,11 @@ use App\RMP\Interfaces\Staff as StaffInterface;
 class StaffRepo implements StaffInterface{
 
     public function getRecords(){
-        return User::where('role', 'staff')->with('photos')->get();
+        return User::where('role', 'staff')->with('photos', 'logins')->orderBy('slug')->get();
     }
 
     public function getRecord($slug){
-        $user = User::with('photos')->where('slug', $slug)->first();
+        $user = User::with('photos','logins')->where('slug', $slug)->first();
         return $user;
     }
 
