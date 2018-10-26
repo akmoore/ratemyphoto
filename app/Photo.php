@@ -16,6 +16,17 @@ class Photo extends Model
         'image_lg', 'image_org', 'image_name', 'image_thumb'
     ];
 
+    protected $appends = ['name', 'alt'];
+
+    //Attributes (Dynamic Fields)
+    public function getNameAttribute(){
+        return $this->image_md;
+    }
+
+    public function getAltAttribute(){
+        return $this->image_name;
+    }
+
     //Relationships
     /**
      * Associate user to photos

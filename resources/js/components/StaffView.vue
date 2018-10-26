@@ -30,7 +30,8 @@
                                 </el-tooltip>
                                 <el-tooltip class="item" effect="dark" content="View" placement="top">
                                     <!-- <el-button class="outline-none" size="medium" type="primary" icon="el-icon-view" circle @click="showLargePhoto(photo)"></el-button>                                     -->
-                                    <el-button class="outline-none" size="medium" type="primary" icon="el-icon-view" circle @click="index = photoIndex"></el-button>                                    
+                                    <!-- <el-button class="outline-none" size="medium" type="primary" icon="el-icon-view" circle @click="index = photoIndex"></el-button>                                     -->
+                                    <el-button class="outline-none" size="medium" type="primary" icon="el-icon-view" circle @click="showLightbox(photo)"></el-button>                                    
                                 </el-tooltip>
                             </div>
                             <div>
@@ -54,6 +55,12 @@
             </div>
         </el-dialog> -->
         <gallery :images="galleryPhotos" :index="index" @close="index = null"></gallery>
+        <lightbox id="mylightbox"
+            ref="lightbox"
+            :images="currentPhotos"
+            directory="https://akmoore.nyc3.digitaloceanspaces.com"
+            :timeoutDuration="5000"
+        ></lightbox>
     </el-main>
 </template>
 
@@ -122,6 +129,10 @@ export default {
                       type: 'success'
                     });
                 })
+        },
+        showLightbox: function(imageName) {
+            console.log(imageName)
+            this.$refs.lightbox.show(imageName);
         }
     }
 }

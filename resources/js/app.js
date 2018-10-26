@@ -13,6 +13,7 @@ import store from './store'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import locale from 'element-ui/lib/locale/lang/en'
+import Lightbox from 'vue-my-photos'
 
 Vue.use(ElementUI, { locale });
 
@@ -23,6 +24,7 @@ Vue.use(ElementUI, { locale });
  */
 
 Vue.component('app', require('./App.vue'));
+Vue.component('lightbox', Lightbox);
 
 const app = new Vue({
     el: '#app',
