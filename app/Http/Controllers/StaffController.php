@@ -21,6 +21,10 @@ class StaffController extends Controller
      * @return void
      */
     public function index(){
+        if(auth()->user()->role !== 'admin'){
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
         return $this->staff->getRecords();
     }
 
@@ -55,7 +59,7 @@ class StaffController extends Controller
         if(auth()->user()->role !== 'admin'){
             return response()->json(['error' => 'Unauthorized'], 403);
         }
-        
+
         return $this->staff->deleteRecord($id);
     }
 }
