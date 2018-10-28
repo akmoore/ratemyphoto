@@ -183,9 +183,6 @@ export default new Vuex.Store({
         setCurrentUserData(state, payload){
             let decoded = jwt(payload.access_token)
             setToken(payload.access_token)
-            setName(decoded.name)
-            setRole(decoded.role)
-            setId(decoded.id)
         },
         setStaff(state, payload){
             state.staff = payload

@@ -24,7 +24,6 @@ class StaffController extends Controller
         if(auth()->user()->role !== 'admin'){
             return response()->json(['error' => 'Unauthorized'], 403);
         }
-
         return $this->staff->getRecords();
     }
 
@@ -43,7 +42,9 @@ class StaffController extends Controller
     }
 
     public function show($slug){
-        // return $slug;
+        if(auth()->user()->role !== 'admin'){
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
         return $this->staff->getRecord($slug);
     }
 
