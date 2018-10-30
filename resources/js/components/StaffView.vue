@@ -132,7 +132,7 @@ export default {
         },
         showLightbox: function(imageName) {
             console.log(imageName)
-            this.$refs.lightbox.show(imageName);
+            this.$refs.lightbox.show(imageName.name);
         }
     }
 }
