@@ -129,6 +129,12 @@ export default {
                       type: 'success'
                     });
                 })
+                .catch(err => {
+                    this.$message({
+                      message: err.error,
+                      type: 'error'
+                    });
+                })
         },
         showLightbox: function(imageName) {
             console.log(imageName)

@@ -163,12 +163,16 @@ export default new Vuex.Store({
             })
         },
         preferPhoto({commit, dispatch}, photo){
-            axios.post(`${baseUrl}/api/prefer/${photo.id}`, null, {headers: {Authorization: `Bearer ${getToken()}`}})
-                 .then(response => {
-                    //  console.log(response)
-                     dispatch('getPhotos', response.data)
-                    //  resolve(response.data)
-                 })
+            return new Promise((resolve, reject) => {
+                axios.post(`${baseUrl}/api/prefer/${photo.id}`, null, {headers: {Authorization: `Bearer ${getToken()}`}})
+                .then(response => {
+                   //  console.log(response)
+                    dispatch('getPhotos', response.data)
+                   //  resolve(response.data)
+                })
+                .catch(err => reject(err.response.data))
+            })
+            
         },
         deletePhoto({commit}, photo){
             return new Promise((resolve, reject) => {

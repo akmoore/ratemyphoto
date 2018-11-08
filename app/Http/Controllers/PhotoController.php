@@ -35,6 +35,10 @@ class PhotoController extends Controller
     public function prefer($id){
         $preferredPhoto = Photo::findOrFail($id);
         $currentPreferred = auth()->user()->photos->where('preferred', 1)->first();
+
+        if(!auth()->user()->can_select){
+            return response()->json(['error' => "Selecting is disabled."], 401);
+        }
         
         if($currentPreferred){
             $currentPreferred->preferred = 0;
@@ -71,7 +75,7 @@ class PhotoController extends Controller
         if(auth()->user()->role !== 'admin'){
             return response()->json(['error' => 'Unauthorized'], 403);
         }
-        
+
         // create the file receiver
         $receiver = new FileReceiver("file", $request, HandlerFactory::classFromRequest($request));
         // check if the upload is success, throw exception or return response you need
