@@ -13,12 +13,12 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         
         <!-- Styles -->
-        <link rel="stylesheet" href="{{asset('css/app.css')}}">
+        <link rel="stylesheet" href="{{asset('css/app.css?v=1.2.2')}}">
     </head>
     <body>
         <div id="app">
             <app></app>
         </div>
-        <script src="{{asset('js/app.js?v=1.2.1')}}"></script>
+        <script src="{{asset('js/app.js?v=1.2.2')}}"></script>
     </body>
 </html>

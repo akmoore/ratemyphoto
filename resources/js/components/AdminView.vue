@@ -22,7 +22,10 @@
                         label="Image"
                         width="80">
                         <template slot-scope="scope">
-                            <img :src="`https://akmoore.nyc3.digitaloceanspaces.com${primaryImage(scope.row.photos)['image_sm']}`" class="image" v-if="primaryImage(scope.row.photos)">
+                            <div v-if="primaryImage(scope.row.photos)">
+                                <div class="chosen" :class="{self:scope.row.who_selected === 'self', admin:scope.row.who_selected === 'admin'}"></div>
+                                <img :src="`https://akmoore.nyc3.digitaloceanspaces.com${primaryImage(scope.row.photos)['image_sm']}`" class="image" >
+                            </div>
                             <img src="/images/staff_no_photo.png" class="image" v-else>
                         </template>
                     </el-table-column>
@@ -174,7 +177,28 @@ export default {
 
     .image{
         border-radius: 5px;
+        /* display: block; */
+        position: relative;
     }
+
+    .chosen{
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 10;
+        width: 8px;
+        height: 8px;
+        border-radius: 50px;
+    }
+
+        .self{
+            background-color: rgb(35, 193, 255);
+        }
+
+        .admin{
+            /* background-color: rgb(247, 30, 30); */
+            background-color: #9C27B0;
+        }
 
     .outline-none{
         outline: none;
