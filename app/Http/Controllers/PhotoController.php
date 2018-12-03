@@ -28,8 +28,15 @@ class PhotoController extends Controller
     public function index(Request $request){
         // return $this->photo->getRecords();
         $staff = User::with('photos')->find($request->staff);
-        $photos = $staff->photos()->get();
-        return $photos;
+        // $photos = $staff->photos()->whereFeatured(true)->get();
+        $featured = $staff->photos->whereIn('featured', true);
+        if(count($featured)){
+            return [$staff->photos()->whereFeatured(true)->get(), true];
+        }else{
+            return [$staff->photos()->get(), false];
+        }
+        // return [$staff->photos, false];
+        // return $photos;
     }
 
     public function prefer($id){

@@ -19,7 +19,8 @@
                 v-for="(photo, photoIndex) in photos" :key="photoIndex" class="image-card">
                 <el-card :body-style="{ padding: '0px' }" shadow="hover" style="position:relative;">
                     <i class="el-icon-success success-icon" v-if="photo.preferred"></i>
-                    <img :src="`https://akmoore.nyc3.digitaloceanspaces.com${photo.image_sm}`" :alt="photo.image_name" class="image">
+                    <img :src="`https://akmoore.nyc3.digitaloceanspaces.com${photo.image_md}`" :alt="photo.image_name" class="image" v-if="featured">
+                    <img :src="`https://akmoore.nyc3.digitaloceanspaces.com${photo.image_sm}`" :alt="photo.image_name" class="image" v-else>
 
                     <div style="padding: 14px;">
                         <span>{{photo.image_name}}</span>
@@ -67,6 +68,7 @@
 <script>
 import {mapActions, mapState} from 'vuex'
 import VueGallery from 'vue-gallery'
+import _ from 'lodash'
 
 export default {
     name: 'StaffView',
@@ -86,9 +88,15 @@ export default {
         console.log(this.user)
     },
     computed:{
-        ...mapState(['currentPhotos']),
+        ...mapState(['currentPhotos','featured']),
         photos(){
-            return this.currentPhotos
+            // console.log(_.sortBy(this.currentPhotos, ['sort']))
+            if(this.featured){
+                return _.sortBy(this.currentPhotos, ['sort']);
+            }else{
+                return this.currentPhotos
+            }
+            // return this.currentPhotos
         },
         message(){
             return ` ${this.user.first_name}, here are the selected images from your photoshoot. Please select (by clicking the check mark button) the photo that you want featured on the staff photo wall.`

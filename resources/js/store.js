@@ -20,6 +20,7 @@ export default new Vuex.Store({
         currentUserRole: User.role,
         staff: null,
         currentPhotos: [],
+        featured: false,
         timer: null,
         fiveMinuteWarning: false
     },
@@ -195,7 +196,8 @@ export default new Vuex.Store({
             destroyUser()
         },
         setPhotos(state, payload){
-            state.currentPhotos = payload
+            state.currentPhotos = payload[0]
+            state.featured = payload[1]
         },
     }
 })
